@@ -1,0 +1,21 @@
+def test_invalid_authorization_header(mocker):
+    class Request:
+        headers = {}
+        query_params = {
+            "userId": "VALID_USER_ID",
+            "accountNumber": "VALID_ACCOUNT_NUMBER"
+        }
+
+    context = piping_core.Context()
+    context.request = Request()
+
+    # Ensure that an exception is raised when the Authorization header is invalid
+    context.request.headers = {
+        "Authorization": "",
+        "Avon-Api-Key": "6efcc546-0ab7-4184-ae06-818ab441c703"
+    }
+    try:
+        _get_ags_market_code(context)
+        assert False, 'Expected an exception to be raised'
+    except Exception as e:
+        assert str(e) == 'Invalid Authorization header'
